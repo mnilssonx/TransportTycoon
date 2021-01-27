@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App", "TransportSimApp\TransportSimApp.csproj", "{84D6094C-8233-4D40-8EB4-F90B4C1BCC90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{D23AE9DF-3C2B-4F1C-83E0-38AEFD44173B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{84D6094C-8233-4D40-8EB4-F90B4C1BCC90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84D6094C-8233-4D40-8EB4-F90B4C1BCC90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84D6094C-8233-4D40-8EB4-F90B4C1BCC90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84D6094C-8233-4D40-8EB4-F90B4C1BCC90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D23AE9DF-3C2B-4F1C-83E0-38AEFD44173B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D23AE9DF-3C2B-4F1C-83E0-38AEFD44173B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D23AE9DF-3C2B-4F1C-83E0-38AEFD44173B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D23AE9DF-3C2B-4F1C-83E0-38AEFD44173B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E3C41701-FE5A-459F-B1A1-CDEF5C002C3D}
+	EndGlobalSection
+EndGlobal
