@@ -1,4 +1,6 @@
-﻿using TransportSimApp.Simulation;
+﻿using System;
+using TransportSimApp.Events;
+using TransportSimApp.Simulation;
 
 namespace TransportSimApp
 {
@@ -6,31 +8,43 @@ namespace TransportSimApp
     {
         public static int CalculateTime(Location[] destinations, Routes routes, VehiclePool vehiclePool)
         {
-            var world = new World(destinations, routes);
+            var worldState = new WorldState(destinations, routes);
+            var eventDispatcher = new EventDispatcher(Console.WriteLine);
 
-            while (!world.AllDestinationsHaveBeenReached())
+            while (true)
             {
                 foreach (var vehicle in vehiclePool.All)
                 {
-                    var pickupCandidate = world.GetNextPackageAtLocation(vehicle.Location);
+                    var pickupCandidate = worldState.GetNextPackageAtLocation(vehicle.Location);
                     if (vehicle.TryPickUp(pickupCandidate))
                     {
-                        world.RegisterPickup(vehicle.Location, pickupCandidate);
+                        worldState.RegisterPickup(vehicle.Location, pickupCandidate);
+                    }
+
+                    if (vehicle.Transport != null && vehicle.Transport.Traveled == 0)
+                    {
+                        eventDispatcher.Dispatch(new TransportEvent(EventType.DEPART, worldState.Time, vehicle.Transport, vehicle.Location));
                     }
                 }
+
+                if (worldState.AllDestinationsHaveBeenReached())
+                    break;
+                
+                worldState.Advance();
 
                 foreach (var vehicle in vehiclePool.All)
                 {
-                    if (vehicle.TryDeliver(out var delivery))
-                    {
-                        world.RegisterDelivery(vehicle.Location, delivery);
-                    }
-                }
+                    if (!vehicle.TryCompleteTransport(out var completed)) 
+                        continue;
 
-                world.Update();
+                    if (completed.Package != null)
+                        worldState.RegisterDelivery(vehicle.Location, completed.Package);
+
+                    eventDispatcher.Dispatch(new TransportEvent(EventType.ARRIVE, worldState.Time, completed, vehicle.Location));
+                }
             }
 
-            return world.Time;
+            return worldState.Time;
         }
     }
 }

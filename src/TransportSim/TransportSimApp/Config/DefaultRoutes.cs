@@ -8,10 +8,10 @@ namespace TransportSimApp.Config
         {
             return new Routes(
                 new Route(Location.A, 
-                    new RouteSegment(1, Location.Factory, Location.Port), 
-                    new RouteSegment(4, Location.Port, Location.A)),
+                    new RouteSegment(1, Location.FACTORY, Location.PORT), 
+                    new RouteSegment(4, Location.PORT, Location.A)),
                 new Route(Location.B, 
-                    new RouteSegment(5, Location.Factory, Location.B)));
+                    new RouteSegment(5, Location.FACTORY, Location.B)));
         }
     }
 }

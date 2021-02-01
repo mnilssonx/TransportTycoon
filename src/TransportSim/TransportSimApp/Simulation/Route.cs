@@ -9,7 +9,6 @@
         }
 
         public Location Destination { get; }
-
         public RouteSegment[] Segments { get; }
     }
 
@@ -23,9 +22,7 @@
         }
 
         public int Distance { get; }
-
         public Location Start { get; }
-
         public Location Destination { get; }
 
         public RouteSegment Reverse() => new RouteSegment(Distance, Destination, Start);

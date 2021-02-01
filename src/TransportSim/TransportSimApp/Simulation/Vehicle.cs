@@ -4,8 +4,8 @@ namespace TransportSimApp.Simulation
 {
     public abstract class Vehicle
     {
+        private static int _topTransportId = 0;
         private readonly RouteSegment[] _routeSegments;
-        private IActivity _activity = new Idle();
 
         protected Vehicle(Location start, params RouteSegment[] segments)
         {
@@ -13,63 +13,72 @@ namespace TransportSimApp.Simulation
             _routeSegments = segments;
         }
 
-        public Location Location { get; set; }
+        public Location Location { get; private set; }
+        public Transport Transport { get; private set; }
+
+        protected abstract Transport CreateTransport(int id, RouteSegment segment, Package package);
 
         public bool TryPickUp(Package package)
         {
-            if (package == null || _activity is Travel)
+            if (package == null || Transport != null)
                 return false;
 
             var matchingSegment = _routeSegments.FirstOrDefault(s => s.Destination == package.GetNextDeliverySegment().Destination);
             if (matchingSegment == null)
                 return false;
 
-            _activity = new Travel(matchingSegment, package);
+            Transport = CreateTransport(_topTransportId++, matchingSegment, package);
             return true;
         }
 
-        public bool TryDeliver(out Package package)
+        public bool TryCompleteTransport(out Transport completed)
         {
-            if (_activity is Travel travel)
+            var arrived = false;
+            completed = null;
+
+            if (Transport != null)
             {
-                travel.Traveled++;
+                Transport.Traveled++;
 
-                if (travel.Traveled >= travel.RouteSegment.Distance)
+                if (Transport.Traveled >= Transport.RouteSegment.Distance)
                 {
-                    Location = travel.RouteSegment.Destination;
+                    arrived = true;
+                    completed = Transport;
+                    Location = Transport.RouteSegment.Destination;
 
-                    if (travel.Package != null)
+                    if (Transport.Package != null)
                     {
                         // Deliver and set course for home
-                        package = travel.Package;
-                        travel.Package.Unload(Location);
-                        _activity = new Travel(travel.RouteSegment.Reverse(), null);
-                        return true;
+                        Transport.Package.Unload(Location);
+                        Transport = Transport.CreateReturn();
                     }
                     else
                     {
                         // We're home and ready for new travels
-                        _activity = new Idle();
+                        Transport = null;
                     }
                 }
             }
 
-            package = null;
-            return false;
+            return arrived;
         }
     }
 
     public class Boat : Vehicle
     {
-        public Boat(params RouteSegment[] segments) : base(Location.Port, segments)
+        public Boat(params RouteSegment[] segments) : base(Location.PORT, segments)
         {
         }
+
+        protected override Transport CreateTransport(int id, RouteSegment segment, Package package) => new Transport(id, TransportType.SHIP, segment, package);
     }
 
     public class Truck : Vehicle
     {
-        public Truck(params RouteSegment[] segments) : base(Location.Factory, segments)
+        public Truck(params RouteSegment[] segments) : base(Location.FACTORY, segments)
         {
         }
+
+        protected override Transport CreateTransport(int id, RouteSegment segment, Package package) => new Transport(id, TransportType.TRUCK, segment, package);
     }
 }

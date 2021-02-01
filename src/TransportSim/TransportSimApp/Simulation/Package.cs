@@ -4,14 +4,15 @@ namespace TransportSimApp.Simulation
 {
     public class Package
     {
-        public Package(Location location, Route deliveryRoute)
+        public Package(int id, Location location, Route deliveryRoute)
         {
+            Id = id;
             Location = location;
             DeliveryRoute = deliveryRoute;
         }
 
+        public int Id { get; set; }
         public Route DeliveryRoute { get; }
-
         public Location Location { get; set; }
 
         public void Unload(Location destination)

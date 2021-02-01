@@ -3,12 +3,12 @@ using System.Linq;
 
 namespace TransportSimApp.Simulation
 {
-    public class World
+    public class WorldState
     {
         private readonly Location[] _destinations;
         private readonly IDictionary<Location, List<Package>> _packagesAtLocations;
 
-        public World(Location[] destinations, Routes routes)
+        public WorldState(Location[] destinations, Routes routes)
         {
             _destinations = destinations;
 
@@ -17,8 +17,8 @@ namespace TransportSimApp.Simulation
                 .ToDictionary(
                     l => l,
                     l => new List<Package>(
-                        l == Location.Factory
-                            ? destinations.Select(d => new Package(Location.Factory, routes.ForDestination(d)))
+                        l == Location.FACTORY
+                            ? destinations.Select((d, i) => new Package(i, Location.FACTORY, routes.ForDestination(d)))
                             : Enumerable.Empty<Package>()));
         }
 
@@ -39,7 +39,7 @@ namespace TransportSimApp.Simulation
             _packagesAtLocations[location].Remove(package);
         }
 
-        public void Update()
+        public void Advance()
         {
             Time++;
         }

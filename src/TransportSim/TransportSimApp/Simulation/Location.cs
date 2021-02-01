@@ -6,10 +6,10 @@ namespace TransportSimApp.Simulation
 {
     public enum Location
     {
-        Factory,
+        FACTORY,
         A,
         B,
-        Port
+        PORT
     }
 
     public static class Locations
