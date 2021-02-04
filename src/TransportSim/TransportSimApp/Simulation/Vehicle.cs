@@ -5,12 +5,10 @@ namespace TransportSimApp.Simulation
     public abstract class Vehicle
     {
         private static int _topTransportId = 0;
-        private readonly RouteSegment[] _routeSegments;
 
-        protected Vehicle(Location start, params RouteSegment[] segments)
+        protected Vehicle(Location start)
         {
             Location = start;
-            _routeSegments = segments;
         }
 
         public Location Location { get; private set; }
@@ -23,11 +21,7 @@ namespace TransportSimApp.Simulation
             if (package == null || Transport != null)
                 return false;
 
-            var matchingSegment = _routeSegments.FirstOrDefault(s => s.Destination == package.GetNextDeliverySegment().Destination);
-            if (matchingSegment == null)
-                return false;
-
-            Transport = CreateTransport(_topTransportId++, matchingSegment, package);
+            Transport = CreateTransport(_topTransportId++, package.GetNextDeliverySegment(), package);
             return true;
         }
 
@@ -66,7 +60,7 @@ namespace TransportSimApp.Simulation
 
     public class Boat : Vehicle
     {
-        public Boat(params RouteSegment[] segments) : base(Location.PORT, segments)
+        public Boat() : base(Location.PORT)
         {
         }
 
@@ -75,7 +69,7 @@ namespace TransportSimApp.Simulation
 
     public class Truck : Vehicle
     {
-        public Truck(params RouteSegment[] segments) : base(Location.FACTORY, segments)
+        public Truck() : base(Location.FACTORY)
         {
         }
 
